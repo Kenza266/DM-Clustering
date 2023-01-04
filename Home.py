@@ -18,5 +18,5 @@ st.dataframe(data)
 tsne = Image.open('tsne.png')
 pca = Image.open('pca.png')
 
-st.image(tsne, caption='TSNE Distribution', width=850)
-st.image(pca, caption='PCA Distribution',  width=850)
+st.image(tsne, caption='Images//TSNE Distribution', width=850)
+st.image(pca, caption='Images//PCA Distribution',  width=850)

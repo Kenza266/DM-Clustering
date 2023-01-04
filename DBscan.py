@@ -1,11 +1,20 @@
 import numpy as np
 from tqdm import tqdm
+from scipy.spatial.distance import hamming
+from sklearn.metrics.pairwise import manhattan_distances
 
 class DBscan():
-    def __init__(self, eps, min_samples, similarity='default'):
+    def __init__(self, eps, min_samples, similarity='hamming'):
         self.eps = eps
         self.min_samples = min_samples
-        self.similarity = similarity
+        
+        if similarity == 'manhattan':
+            self.distance  = manhattan_distances
+            #self.distance = lambda x, y: sum(abs(a - b) for a, b in zip(x, y))
+        elif similarity == 'hamming':
+            self.distance  = hamming
+            #self.distance = lambda x, y: sum(a != b for a, b in zip(x, y))
+        
 
     def cluster(self, X, stop=False, dist_matrix=None):
         self.X = X
@@ -31,17 +40,10 @@ class DBscan():
         return self.cluster_labels 
 
     def calculate_matrix(self):
-        if self.similarity == 'default':
-            distance = lambda x, y: np.linalg.norm(x - y) 
-        elif self.similarity == 'manhattan':
-            distance = lambda x, y: sum(abs(a - b) for a, b in zip(x, y))
-        elif self.similarity == 'hamming':
-            distance = lambda x, y: sum(a != b for a, b in zip(x, y))
-        
         self.dist_matrix = np.zeros((self.X.shape[0], self.X.shape[0]))
         for i in tqdm(range(self.X.shape[0])):
             for j in range(self.X.shape[0]):
-                self.dist_matrix[i, j] = distance(self.X[i], self.X[j])
+                self.dist_matrix[i, j] = self.distance(self.X[i], self.X[j])
 
     def get_neighbors(self, i):
         neighbors = []

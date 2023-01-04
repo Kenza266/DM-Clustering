@@ -1,5 +1,6 @@
 def report(actual_labels, predicted_labels):
     classes = list(set(actual_labels + predicted_labels))
+    epsilon = 1e-6
 
     tps = {}
     tns = {}
@@ -30,7 +31,7 @@ def report(actual_labels, predicted_labels):
     for c in classes:
         precision[c] = tps[c] / (tps[c] + fps[c])
         recall[c] = tps[c] / (tps[c] + fns[c])
-        f1[c] = 2 * (precision[c] * recall[c]) / (precision[c] + recall[c])
+        f1[c] = 2 * (precision[c] * recall[c]) / (precision[c] + recall[c] + epsilon)
 
     accuracy = sum(tps.values()) / (sum(tps.values()) + sum(fps.values()) + sum(fns.values()))
 
