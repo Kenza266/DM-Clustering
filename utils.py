@@ -1,4 +1,7 @@
-def report(actual_labels, predicted_labels):
+from sklearn.metrics import silhouette_score
+from sklearn.metrics import adjusted_rand_score
+
+def report(actual_labels, predicted_labels, X=None):
     classes = list(set(actual_labels + predicted_labels))
     epsilon = 1e-6
 
@@ -35,11 +38,14 @@ def report(actual_labels, predicted_labels):
 
     accuracy = sum(tps.values()) / (sum(tps.values()) + sum(fps.values()) + sum(fns.values()))
 
-    print("Classification Report")
+    out = "Classification Report\n"
     for c in classes:
-        print("Class {}".format(c))
-        print("Precision: {:.3f}".format(precision[c]))
-        print("Recall: {:.3f}".format(recall[c]))
-        print("F1-Score: {:.3f}".format(f1[c]))
-        print()
-    print("Accuracy: {:.3f}".format(accuracy))
+        out += "Class {}\n".format(c)
+        out += "Precision: {:.3f}\n".format(precision[c])
+        out += "Recall: {:.3f}\n".format(recall[c])
+        out += "F1-Score: {:.3f}\n\n".format(f1[c])
+    out += "Accuracy: {:.3f}\n\n".format(accuracy)
+    
+    '''out += "Silhouette score: {:.3f}\n".format(silhouette_score(X, predicted_labels))
+    out += "Adjusted rand score: {:.3f}\n\n".format(adjusted_rand_score(actual_labels, predicted_labels))'''
+    return out 

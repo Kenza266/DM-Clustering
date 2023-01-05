@@ -46,8 +46,9 @@ eps = st.sidebar.number_input('Eps', step=1, min_value=1, max_value=2500, value=
 min_samples = st.sidebar.number_input('MinPts', step=1, min_value=1, max_value=50, value=25)
 
 if st.sidebar.button('Run'):
-    start = time.time()
+    
+    '''start = time.time()
     dbscan = DBscan(eps=eps, min_samples=min_samples, similarity=similarity.lower()) 
     clusters = dbscan.cluster(input, dist_matrix=dist_matrix) 
     end = time.time() - start
-    st.write(end)
+    st.write(end)'''

@@ -1,9 +1,15 @@
-import time 
+# import time 
 import pickle
 import numpy as np
 import pandas as pd
 import streamlit as st
 from Agnes import Agnes
+from utils import report
+
+from sklearn.metrics import silhouette_score
+from sklearn.metrics import adjusted_rand_score
+from sklearn.cluster import AgglomerativeClustering as SK_Agnes
+
 
 st.set_page_config(layout="wide")
 st.title('Clustering with Agnes')
@@ -43,12 +49,18 @@ elif similarity == 'Hamming':
     input = X
     file = 'Agnes//Distances_Hamming.pkl'
 
+linkage = st.sidebar.selectbox(
+    'Linkage',
+    ('Average', 'Complete', 'Single')) 
+
 agnes = Agnes(similarity.lower()) 
 with open(file, 'rb') as f:
     dist_matrix = pickle.load(f) 
 
 if st.sidebar.button('Run'):
-    start = time.time()
-    clusters, distances, nb_clusters = agnes.cluster(input, dist_matrix=dist_matrix) 
-    end = time.time() - start
-    st.write(end)
+    agnes = SK_Agnes(2, affinity=similarity.lower(), linkage=linkage.lower())
+    clustering = agnes.fit(input) 
+
+    st.text(report(y, list(clustering.labels_)))
+    st.text('Silhouette score:' + str(silhouette_score(X, list(clustering.labels_))))
+    st.text('Adjusted rand score:' + str(adjusted_rand_score(y, list(clustering.labels_))))
